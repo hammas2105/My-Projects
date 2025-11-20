@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback & Suggestions - QuickAccess Hub</title>
+    <style>
+        :root {
+            /* Light Theme */
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-primary: white;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --card-text: #333;
+            --card-description: #666;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-hover: rgba(0, 0, 0, 0.2);
+            --link-bg: linear-gradient(135deg, #667eea, #764ba2);
+            --link-text: white;
+            --success: #51cf66;
+            --warning: #ffd43b;
+            --error: #ff6b6b;
+            --floating-btn: #fff;
+            --floating-text: #333;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --bg-gradient: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
+            --card-bg: rgba(45, 55, 72, 0.95);
+            --text-primary: #E2E8F0;
+            --text-secondary: #A0AEC0;
+            --card-text: #E2E8F0;
+            --card-description: #A0AEC0;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --shadow-hover: rgba(0, 0, 0, 0.5);
+            --link-bg: linear-gradient(135deg, #63B3ED, #B794F4);
+            --link-text: #1A202C;
+            --success: #2b6cb0;
+            --warning: #d69e2e;
+            --error: #e53e3e;
+            --floating-btn: #2D3748;
+            --floating-text: #E2E8F0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 20px;
+            border-radius: 25px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 25px;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        /* Feedback Form */
+        .feedback-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px var(--shadow);
+            color: var(--card-text);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--card-text);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: var(--card-bg);
+            color: var(--card-text);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            background: var(--link-bg);
+            color: var(--link-text);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Admin Section - Hidden by default */
+        .admin-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px var(--shadow);
+            color: var(--card-text);
+            display: none; /* Hidden until password is entered */
+        }
+
+        .admin-login {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .admin-login input {
+            width: 200px;
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            margin-right: 10px;
+            background: var(--card-bg);
+            color: var(--card-text);
+        }
+
+        .admin-login button {
+            background: var(--link-bg);
+            color: var(--link-text);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .suggestions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .suggestions-header h2 {
+            font-size: 1.5rem;
+            color: var(--card-text);
+        }
+
+        .clear-btn {
+            background: var(--error);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .suggestion-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .suggestion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .suggestion-name {
+            font-weight: 600;
+            color: var(--card-text);
+        }
+
+        .suggestion-date {
+            font-size: 0.8rem;
+            color: var(--card-description);
+        }
+
+        .suggestion-category {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        .suggestion-message {
+            color: var(--card-description);
+            line-height: 1.5;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--card-description);
+        }
+
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow);
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: var(--error);
+        }
+
+        .notification.warning {
+            background: var(--warning);
+            color: #1a202c;
+        }
+
+        /* Floating Button */
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--floating-btn);
+            color: var(--floating-text);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px var(--shadow);
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px var(--shadow-hover);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .theme-toggle {
+                position: relative;
+                margin-bottom: 20px;
+            }
+
+            .suggestion-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .admin-login input {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="theme-toggle" onclick="toggleTheme()">
+                🌙 Dark Mode
+            </button>
+            <h1>💡 Feedback & Suggestions</h1>
+            <p>Share your ideas to improve QuickAccess Hub</p>
+            <a href="index.html" class="back-btn">← Back to Home</a>
+        </div>
+
+        <!-- Feedback Form (Visible to everyone) -->
+        <div class="feedback-card">
+            <h2>Share Your Suggestion</h2>
+            <form id="feedbackForm">
+                <div class="form-group">
+                    <label for="name">Your Name (Optional)</label>
+                    <input type="text" id="name" placeholder="Enter your name">
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Suggestion Type</label>
+                    <select id="category">
+                        <option value="new-feature">New Feature</option>
+                        <option value="improvement">Improvement</option>
+                        <option value="bug-report">Bug Report</option>
+                        <option value="website-suggestion">Website Suggestion</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Your Suggestion *</label>
+                    <textarea id="message" placeholder="Describe your suggestion in detail..." required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Suggestion</button>
+            </form>
+        </div>
+
+        <!-- Admin Section (Hidden - Only you can access) -->
+        <div class="admin-section" id="adminSection">
+            <div class="admin-login">
+                <input type="password" id="adminPassword" placeholder="Enter admin password">
+                <button onclick="loginAdmin()">Access Suggestions</button>
+            </div>
+
+            <div id="suggestionsContent" style="display: none;">
+                <div class="suggestions-header">
+                    <h2>All Suggestions (Admin View)</h2>
+                    <button class="clear-btn" onclick="clearAllSuggestions()">Clear All</button>
+                </div>
+                <div id="suggestionsList">
+                    <!-- Suggestions will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <a href="#" class="floating-btn" onclick="scrollToTop()">↑</a>
+
+    <script>
+        // =======================
+        // CONFIGURATION - SET YOUR PASSWORD HERE
+        // =======================
+        const ADMIN_PASSWORD = "hami2105"; // CHANGE THIS TO YOUR PASSWORD
+
+        // Theme functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+            const currentTheme = html.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                html.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 Dark Mode';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Light Mode';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Light Mode';
+            }
+        }
+
+        // Show admin section (only show the login part)
+        function showAdminSection() {
+            document.getElementById('adminSection').style.display = 'block';
+        }
+
+        // Login to admin panel
+        function loginAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('suggestionsContent').style.display = 'block';
+                document.querySelector('.admin-login').style.display = 'none';
+                displaySuggestions();
+                showNotification('Admin access granted!', 'success');
+            } else {
+                showNotification('Incorrect password!', 'error');
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Get suggestions from localStorage
+        function getSuggestions() {
+            const suggestions = localStorage.getItem('quickaccess-suggestions');
+            return suggestions ? JSON.parse(suggestions) : [];
+        }
+
+        // Save suggestions to localStorage
+        function saveSuggestions(suggestions) {
+            localStorage.setItem('quickaccess-suggestions', JSON.stringify(suggestions));
+        }
+
+        // Display suggestions
+        function displaySuggestions() {
+            const suggestions = getSuggestions();
+            const container = document.getElementById('suggestionsList');
+            
+            if (suggestions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">💡</div>
+                        <h3>No suggestions yet</h3>
+                        <p>Be the first to share your ideas!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = suggestions.map((suggestion, index) => `
+                <div class="suggestion-item">
+                    <div class="suggestion-header">
+                        <div class="suggestion-name">${suggestion.name || 'Anonymous'}</div>
+                        <div class="suggestion-date">${new Date(suggestion.date).toLocaleDateString()}</div>
+                    </div>
+                    <div class="suggestion-category">${getCategoryLabel(suggestion.category)}</div>
+                    <div class="suggestion-message">${suggestion.message}</div>
+                </div>
+            `).join('');
+        }
+
+        // Get category label
+        function getCategoryLabel(category) {
+            const categories = {
+                'new-feature': 'New Feature',
+                'improvement': 'Improvement',
+                'bug-report': 'Bug Report',
+                'website-suggestion': 'Website Suggestion',
+                'other': 'Other'
+            };
+            return categories[category] || category;
+        }
+
+        // Handle form submission
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value.trim();
+            const category = document.getElementById('category').value;
+            const message = document.getElementById('message').value.trim();
+            
+            if (!message) {
+                showNotification('Please enter your suggestion!', 'error');
+                return;
+            }
+            
+            const suggestion = {
+                name: name || 'Anonymous',
+                category: category,
+                message: message,
+                date: new Date().toISOString()
+            };
+            
+            const suggestions = getSuggestions();
+            suggestions.unshift(suggestion); // Add to beginning
+            saveSuggestions(suggestions);
+            
+            // Reset form
+            this.reset();
+            showNotification('Thank you for your suggestion!');
+        });
+
+        // Clear all suggestions
+        function clearAllSuggestions() {
+            if (confirm('Are you sure you want to delete all suggestions? This cannot be undone.')) {
+                localStorage.removeItem('quickaccess-suggestions');
+                displaySuggestions();
+                showNotification('All suggestions cleared!', 'warning');
+            }
+        }
+
+        // Scroll to top
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+            showAdminSection(); // Show admin section (login only)
+        });
+    </script>
+        <!-- Footer Credit -->
+    <div class="footer-credit">
+        <p>Website format designed by Syed Hammas Ali</p>
+    </div>
+
+    <style>
+        .footer-credit {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-credit:hover {
+            opacity: 1;
+        }
+
+        .footer-credit p {
+            margin: 0;
+        }
+    </style>
+</body>
+</html>

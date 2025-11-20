@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study,AI and other tools - QuickAccess Hub</title>
+    <style>
+        :root {
+            /* Light Theme */
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-primary: white;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --card-text: #333;
+            --card-description: #666;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-hover: rgba(0, 0, 0, 0.2);
+            --link-bg: linear-gradient(135deg, #667eea, #764ba2);
+            --link-text: white;
+            --badge-free: #51cf66;
+            --badge-premium: #ffd43b;
+            --badge-popular: #ff6b6b;
+            --badge-ai: #8B5CF6;
+            --badge-utility: #10B981;
+            --badge-ide: #F59E0B;
+            --badge-tool: #8B5CF6;
+            --badge-underrated: #6B7280;
+            --floating-btn: #fff;
+            --floating-text: #333;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --bg-gradient: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
+            --card-bg: rgba(45, 55, 72, 0.95);
+            --text-primary: #E2E8F0;
+            --text-secondary: #A0AEC0;
+            --card-text: #E2E8F0;
+            --card-description: #A0AEC0;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --shadow-hover: rgba(0, 0, 0, 0.5);
+            --link-bg: linear-gradient(135deg, #63B3ED, #B794F4);
+            --link-text: #1A202C;
+            --badge-free: #2b6cb0;
+            --badge-premium: #d69e2e;
+            --badge-popular: #e53e3e;
+            --badge-ai: #A78BFA;
+            --badge-utility: #059669;
+            --badge-ide: #D97706;
+            --badge-tool: #A78BFA;
+            --badge-underrated: #4B5563;
+            --floating-btn: #2D3748;
+            --floating-text: #E2E8F0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 20px;
+            border-radius: 25px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 25px;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        /* Websites Grid */
+        .websites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .website-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px var(--shadow);
+            border: 2px solid transparent;
+            color: var(--card-text);
+        }
+
+        .website-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px var(--shadow-hover);
+            border-color: #667eea;
+        }
+
+        [data-theme="dark"] .website-card:hover {
+            border-color: #63B3ED;
+        }
+
+        .website-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .website-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .website-title {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: var(--card-text);
+        }
+
+        .website-description {
+            color: var(--card-description);
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .website-link {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--link-bg);
+            color: var(--link-text);
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .website-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        [data-theme="dark"] .website-link:hover {
+            box-shadow: 0 5px 15px rgba(99, 179, 237, 0.4);
+        }
+
+        /* Badges - COMPLETE SET */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        .badge.free {
+            background: var(--badge-free);
+        }
+
+        .badge.premium {
+            background: var(--badge-premium);
+            color: #1a202c;
+        }
+
+        .badge.popular {
+            background: var(--badge-popular);
+        }
+
+        .badge.ai {
+            background: var(--badge-ai);
+        }
+
+        .badge.utility {
+            background: var(--badge-utility);
+        }
+
+        .badge.utilities {
+            background: var(--badge-utility);
+        }
+
+        .badge.ide {
+            background: var(--badge-ide);
+        }
+
+        .badge.tool {
+            background: var(--badge-tool);
+        }
+
+        .badge.underrated {
+            background: var(--badge-underrated);
+        }
+
+        /* Default for any unknown tags */
+        .badge:not(.free):not(.premium):not(.popular):not(.ai):not(.utility):not(.utilities):not(.ide):not(.tool):not(.underrated) {
+            background: #6B7280;
+        }
+
+        /* Floating Button */
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--floating-btn);
+            color: var(--floating-text);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px var(--shadow);
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px var(--shadow-hover);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .websites-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .theme-toggle {
+                position: relative;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Animation for cards */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .website-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="theme-toggle" onclick="toggleTheme()">
+                🌙 Dark Mode
+            </button>
+            <h1>📚 Study,AI and other useful tools</h1>
+            <p>AI-powered study,assistants and learning platforms</p>
+            <a href="index.html" class="back-btn">← Back to Home</a>
+        </div>
+
+        <div class="websites-grid" id="websitesGrid"></div>
+    </div>
+
+    <a href="#" class="floating-btn" onclick="scrollToTop()">↑</a>
+
+    <script>
+        // Theme functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+            const currentTheme = html.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                html.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 Dark Mode';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Light Mode';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Light Mode';
+            }
+        }
+
+        // Study AI Tools data - ACTUAL TOOLS
+        const studyWebsites = [
+            {
+                title: "ChatGPT",
+                description: "AI assistant for research, writing, and problem-solving",
+                link: "https://chat.openai.com/",
+                icon: "🤖",
+                category: "ai",
+                tags: ["ai", "popular"]
+            },
+            {
+                title: "Grammarly",
+                description: "AI writing assistant for grammar and style improvements",
+                link: "https://www.grammarly.com/",
+                icon: "✍️",
+                category: "ai",
+                tags: ["ai", "free", "premium"]
+            },
+            {
+                title: "Deepseek Ai",
+                description: "Defeater of chat gpt. G.O.A.T for a reason",
+                link: "https://chat.deepseek.com/",
+                icon: "🌊",
+                category: "ai", 
+                tags: ["ai", "free"]
+            },
+            {
+                title: "Text to handwriting", 
+                description: "Tired of writing codes on hand notes, assignment delay, got you. Generate your typed text and get in handwritten format",
+                link: "https://texttohandwriting.com/",
+                icon: "📝",
+                category: "ai",
+                tags: ["ai", "free"]
+            },
+            {
+                title: "Mermaid live",
+                description: "Best and easy alternative to draw.io", 
+                link: "https://mermaid.live/",
+                icon: "🎯",
+                category: "ide",
+                tags: ["ide", "free"]
+            },
+            {
+                title: "MC STUMBLE",
+                description: "Late assignments? Gotcha! Upload any document it will corrupt that document then juts go and upload!",
+                link: "https://www.mcstumble.com/tools/file-corrupter",
+                icon: "☠️",
+                category: "utility",
+                tags: ["utility", "underrated"]
+            },
+            {
+                title: "BONUS WEBSITE",
+                description: "All of your daily used tools like pdf editing etc or all utilities are present here just one click away",
+                link: "https://www.mcstumble.com/tools",
+                icon: "😈",
+                category: "utilities",
+                tags: ["utilities", "underrated"]
+            },
+            {
+                title: "Internet archives",
+                description: "Everything you need is available here",
+                link: "https://archive.org/",
+                icon: "⭐",
+                category: "tool",
+                tags: ["tool", "popular"]
+            },
+            {
+                title: "Gemini ai ", 
+                description: "Offical by google, not more introduction.",
+                link: "https://gemini.google.com/app",
+                icon: "❤️",
+                category: "ai",
+                tags: ["ai", "free"]
+            },
+        ];
+
+        // Display websites
+        function displayWebsites() {
+            const grid = document.getElementById('websitesGrid');
+            grid.innerHTML = '';
+
+            // Display all websites as real cards
+            studyWebsites.forEach((website, index) => {
+                const card = document.createElement('div');
+                card.className = 'website-card';
+                card.style.animationDelay = `${index * 0.1}s`;
+                
+                card.innerHTML = `
+                    <div class="website-header">
+                        <div class="website-icon">${website.icon}</div>
+                        <div>
+                            <div class="website-title">
+                                ${website.title}
+                                ${website.tags.map(tag => 
+                                    `<span class="badge ${tag}">${tag}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="website-description">${website.description}</div>
+                    <a href="${website.link}" target="_blank" class="website-link">
+                        Visit Website →
+                    </a>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Scroll to top
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Show/hide floating button
+        function setupFloatingButton() {
+            const floatingBtn = document.querySelector('.floating-btn');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    floatingBtn.style.opacity = '1';
+                    floatingBtn.style.visibility = 'visible';
+                } else {
+                    floatingBtn.style.opacity = '0';
+                    floatingBtn.style.visibility = 'hidden';
+                }
+            });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+            displayWebsites();
+            setupFloatingButton();
+        });
+    </script>
+        <!-- Footer Credit -->
+    <div class="footer-credit">
+        <p>Format created by Syed Hammas Ali</p>
+    </div>
+
+    <style>
+        .footer-credit {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-credit:hover {
+            opacity: 1;
+        }
+
+        .footer-credit p {
+            margin: 0;
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Tools - QuickAccess Hub</title>
+    <style>
+        :root {
+            /* Light Theme */
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-primary: white;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --card-text: #333;
+            --card-description: #666;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-hover: rgba(0, 0, 0, 0.2);
+            --link-bg: linear-gradient(135deg, #667eea, #764ba2);
+            --link-text: white;
+            --badge-free: #51cf66;
+            --badge-premium: #ffd43b;
+            --badge-popular: #ff6b6b;
+            --badge-ai: #8B5CF6;
+            --badge-editor: #10B981;
+            --badge-converter: #F59E0B;
+            --badge-streaming: #EF4444;
+            --badge-downloader: #8B5CF6;
+            --floating-btn: #fff;
+            --floating-text: #333;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --bg-gradient: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
+            --card-bg: rgba(45, 55, 72, 0.95);
+            --text-primary: #E2E8F0;
+            --text-secondary: #A0AEC0;
+            --card-text: #E2E8F0;
+            --card-description: #A0AEC0;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --shadow-hover: rgba(0, 0, 0, 0.5);
+            --link-bg: linear-gradient(135deg, #63B3ED, #B794F4);
+            --link-text: #1A202C;
+            --badge-free: #2b6cb0;
+            --badge-premium: #d69e2e;
+            --badge-popular: #e53e3e;
+            --badge-ai: #A78BFA;
+            --badge-editor: #059669;
+            --badge-converter: #D97706;
+            --badge-streaming: #DC2626;
+            --badge-downloader: #A78BFA;
+            --floating-btn: #2D3748;
+            --floating-text: #E2E8F0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 20px;
+            border-radius: 25px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 25px;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        /* Websites Grid */
+        .websites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .website-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px var(--shadow);
+            border: 2px solid transparent;
+            color: var(--card-text);
+        }
+
+        .website-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px var(--shadow-hover);
+            border-color: #667eea;
+        }
+
+        [data-theme="dark"] .website-card:hover {
+            border-color: #63B3ED;
+        }
+
+        .website-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .website-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .website-title {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: var(--card-text);
+        }
+
+        .website-description {
+            color: var(--card-description);
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .website-link {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--link-bg);
+            color: var(--link-text);
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .website-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        [data-theme="dark"] .website-link:hover {
+            box-shadow: 0 5px 15px rgba(99, 179, 237, 0.4);
+        }
+
+        /* Badges - Video Specific */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        .badge.free {
+            background: var(--badge-free);
+        }
+
+        .badge.premium {
+            background: var(--badge-premium);
+            color: #1a202c;
+        }
+
+        .badge.popular {
+            background: var(--badge-popular);
+        }
+
+        .badge.ai {
+            background: var(--badge-ai);
+        }
+
+        .badge.editor {
+            background: var(--badge-editor);
+        }
+
+        .badge.converter {
+            background: var(--badge-converter);
+        }
+
+        .badge.streaming {
+            background: var(--badge-streaming);
+        }
+
+        .badge.downloader {
+            background: var(--badge-downloader);
+        }
+
+        /* Default for any unknown tags */
+        .badge:not(.free):not(.premium):not(.popular):not(.ai):not(.editor):not(.converter):not(.streaming):not(.downloader) {
+            background: #6B7280;
+        }
+
+        /* Floating Button */
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--floating-btn);
+            color: var(--floating-text);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px var(--shadow);
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px var(--shadow-hover);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .websites-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .theme-toggle {
+                position: relative;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Animation for cards */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .website-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="theme-toggle" onclick="toggleTheme()">
+                🌙 Dark Mode
+            </button>
+            <h1>🎬 Video Tools</h1>
+            <p>Video editors, converters, streaming platforms and downloaders</p>
+            <a href="index.html" class="back-btn">← Back to Home</a>
+        </div>
+
+        <div class="websites-grid" id="websitesGrid"></div>
+    </div>
+
+    <a href="#" class="floating-btn" onclick="scrollToTop()">↑</a>
+
+    <script>
+        // Theme functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+            const currentTheme = html.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                html.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 Dark Mode';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Light Mode';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Light Mode';
+            }
+        }
+
+        // Video Tools data
+        const videoWebsites = [
+            {
+                title: "YouTube",
+                description: "World's largest video sharing and streaming platform",
+                link: "https://www.youtube.com/",
+                icon: "📺",
+                category: "streaming",
+                tags: ["streaming", "popular", "free"]
+            },
+            {
+                title: "VLC Media Player",
+                description: "Free and open source cross-platform multimedia player",
+                link: "https://www.videolan.org/vlc/",
+                icon: "🔴",
+                category: "player",
+                tags: ["free", "popular"]
+            },
+            {
+                title: "OBS Studio",
+                description: "Free and open source software for video recording and live streaming",
+                link: "https://obsproject.com/",
+                icon: "🎥",
+                category: "recording",
+                tags: ["free", "popular"]
+            },
+            {
+                title: "HandBrake",
+                description: "Tool for converting video from nearly any format to a selection of modern, widely supported codecs",
+                link: "https://handbrake.fr/",
+                icon: "🔄",
+                category: "converter",
+                tags: ["converter", "free"]
+            },
+            {
+                title: "DaVinci Resolve",
+                description: "Professional video editing software with free version available",
+                link: "https://www.blackmagicdesign.com/products/davinciresolve",
+                icon: "🎬",
+                category: "editor",
+                tags: ["editor", "free", "premium"]
+            },
+            {
+                title: "Clipchamp",
+                description: "Online video editor with easy-to-use interface",
+                link: "https://clipchamp.com/",
+                icon: "✂️",
+                category: "editor",
+                tags: ["editor", "free", "premium"]
+            },
+            {
+                title: "4K Video Downloader",
+                description: "Download videos, playlists, channels from YouTube and other sites",
+                link: "https://www.4kdownload.com/",
+                icon: "⬇️",
+                category: "downloader",
+                tags: ["downloader", "free", "premium"]
+            },
+            {
+                title: "Canva Video Editor",
+                description: "Simple online video editor with templates and easy editing tools",
+                link: "https://www.canva.com/video-editor/",
+                icon: "🎨",
+                category: "editor",
+                tags: ["editor", "free", "premium"]
+            },
+            {
+                title: "Kapwing",
+                description: "Online video editor with collaborative features",
+                link: "https://www.kapwing.com/",
+                icon: "⚡",
+                category: "editor",
+                tags: ["editor", "free", "premium"]
+            },
+            {
+                title: "FFmpeg",
+                description: "Complete, cross-platform solution to record, convert and stream audio and video",
+                link: "https://ffmpeg.org/",
+                icon: "🔧",
+                category: "converter",
+                tags: ["converter", "free"]
+            },
+            {
+                title: "Netflix",
+                description: "Streaming service with movies, TV shows, and original content",
+                link: "https://www.netflix.com/",
+                icon: "🍿",
+                category: "streaming",
+                tags: ["streaming", "premium", "popular"]
+            },
+             {
+                title: "Netmirror",
+                description: "Free and open source cross-platform movie webseries streaming",
+                link: "https://net20.cc/home",
+                icon: "☠️",
+                category: "streaming",
+                tags: ["free", "streaming"]
+            },
+             {
+                title: "Movie box",
+                description: "Free and open source cross-platform streaming platform for free",
+                link: "https://moviebox.ph/",
+                icon: "'❤️",
+                category: "streaming",
+                tags: ["free", "popular"]
+            },
+             {
+                title: "Sora Ai",
+                description: "Free+ Paid ai video generation",
+                link: "https://openai.com/sora/",
+                icon: "🎥",
+                category: "ai",
+                tags: ["free","paid" ,"popular"]
+            },
+        
+            {
+                title: "Twitch",
+                description: "Live streaming platform for gamers and content creators",
+                link: "https://www.twitch.tv/",
+                icon: "🎮",
+                category: "streaming",
+                tags: ["streaming", "free", "popular"]
+            }
+        ];
+
+        // Display websites
+        function displayWebsites() {
+            const grid = document.getElementById('websitesGrid');
+            grid.innerHTML = '';
+
+            // Display all websites as real cards
+            videoWebsites.forEach((website, index) => {
+                const card = document.createElement('div');
+                card.className = 'website-card';
+                card.style.animationDelay = `${index * 0.1}s`;
+                
+                card.innerHTML = `
+                    <div class="website-header">
+                        <div class="website-icon">${website.icon}</div>
+                        <div>
+                            <div class="website-title">
+                                ${website.title}
+                                ${website.tags.map(tag => 
+                                    `<span class="badge ${tag}">${tag}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="website-description">${website.description}</div>
+                    <a href="${website.link}" target="_blank" class="website-link">
+                        Visit Website →
+                    </a>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Scroll to top
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Show/hide floating button
+        function setupFloatingButton() {
+            const floatingBtn = document.querySelector('.floating-btn');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    floatingBtn.style.opacity = '1';
+                    floatingBtn.style.visibility = 'visible';
+                } else {
+                    floatingBtn.style.opacity = '0';
+                    floatingBtn.style.visibility = 'hidden';
+                }
+            });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+            displayWebsites();
+            setupFloatingButton();
+        });
+    </script>
+        <!-- Footer Credit -->
+    <div class="footer-credit">
+        <p>Format created by Syed Hammas Ali</p>
+    </div>
+
+    <style>
+        .footer-credit {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-credit:hover {
+            opacity: 1;
+        }
+
+        .footer-credit p {
+            margin: 0;
+        }
+    </style>
+</body>
+</html>
